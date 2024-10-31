@@ -1,4 +1,5 @@
-torch
-rwkv
-numpy
 colorama
+gradio
+numpy
+rwkv
+torch
