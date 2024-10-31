@@ -793,7 +793,7 @@ def check_cot(input_grid, gt, cot, verify_intermediate_step=False, verbose=False
 
 MODEL_PATH = "sudoku_rwkv_20241029.pth"
 print(f"Loading model {MODEL_PATH}...")
-model = RWKV(model=MODEL_PATH, strategy="cuda fp16", verbose=False)
+model = RWKV(model=MODEL_PATH, strategy="cpu fp32", verbose=False)
 pipeline = PIPELINE(model, "rwkv_vocab_v20230424")
 tokenizer = TRIE_TOKENIZER("sudoku_vocab_v6.txt")
 pipeline.tokenizer = TRIE_TOKENIZER("sudoku_vocab_v6.txt")
