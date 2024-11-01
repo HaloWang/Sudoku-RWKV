@@ -844,7 +844,7 @@ current_seed = base_seed if base_seed is not None else int(time.time())
 grid, solved_grid = generate_sudoku(difficulty=default_difficulty, seed=current_seed)
 grid, solved_grid = None, None
 
-while True:
+while False:
     
     print('-' * 100)
     print(f'DIFFICULTY: {default_difficulty} | SEED: {current_seed} | MAX TOKEN COUNT: {default_max_token_count} | BREAK WHEN SOMETHING WRONG: {break_when_something_wrong}')
