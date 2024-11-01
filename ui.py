@@ -2,27 +2,27 @@ from generate_sudoku_data import generate_sudoku
 
 import copy
 import time
-from launch import default_difficulty, ui_current_seed, solve_sudoku_using_model, default_max_token_count, break_when_something_wrong, check_cot
+from launch import ui_current_seed, solve_sudoku_using_model, default_max_token_count, break_when_something_wrong, check_cot
 
 import gradio as gr
 
 ui_base_seed = None
 ui_grid = None
 ui_solved_grid = None
-
+ui_difficulty = 1
 ui_current_seed = ui_base_seed if ui_base_seed is not None else int(time.time())
 
-def generate():
-    print("✅ Generating")
+def generate_puzzle():
+    print("✅ Generating a new puzzle")
     global ui_grid, ui_solved_grid, ui_current_seed, ui_base_seed
 
-    ui_grid, ui_solved_grid = generate_sudoku(difficulty=1, seed=ui_current_seed)
+    ui_grid, ui_solved_grid = generate_sudoku(difficulty=ui_difficulty, seed=ui_current_seed)
     ui_current_seed = ui_base_seed if ui_base_seed is not None else int(time.time())
 
     return ui_grid, ui_solved_grid
 
-def solve():
-    print("✅ Solving")
+def solve_puzzle():
+    print("✅ Solving the current puzzle")
     global ui_grid, ui_solved_grid, ui_current_seed, ui_base_seed
 
     if ui_grid is None:
@@ -42,7 +42,6 @@ def solve():
     return
 
 def sudoku_ui(array):
-    # 生成一个用于数独的 UI 模块
     sudoku_elements = []
     with gr.Row():
         for i in range(9):
@@ -63,23 +62,23 @@ def update_ui():
     return sudoku_ui(ui_grid)
 
 with gr.Blocks() as demo:
-
-    grid_text = gr.Textbox(label="Grid")
-
-    solved_grid_text = gr.Textbox(label="Solved Grid")
-
-    generate_btn = gr.Button("Generate a new sudoku puzzle")
-    generate_btn.click(fn=generate, outputs=[grid_text, solved_grid_text])
-
-    # Dynamically update the UI based on the grid
-    grid_ui = gr.State(value=None)
-    generate_btn.click(fn=update_ui, outputs=grid_ui)
-
-    if ui_grid is not None:
-        sudoku_ui(ui_grid)
-
-    solve_btn = gr.Button("Solve")
-    solve_btn.click(fn=solve, inputs=[], outputs=[])
+    # Create a button to generate the puzzle
+    generate_button = gr.Button("Generate Puzzle")
+    
+    # Create a textbox to display the Sudoku grid or a message
+    sudoku_output = gr.Textbox(label="Sudoku Grid", interactive=False)
+    
+    # Define the function to update the UI with the generated puzzle
+    def update_sudoku_ui():
+        if ui_grid is None: return "No puzzle generated yet."
+        with gr.Row() as row:
+            btn1 = gr.Button("Button 1")
+            btn2 = gr.Button("Button 2")
+        return row
+    
+    # Set up the button click event to generate the puzzle and update the UI
+    generate_button.click(fn=generate_puzzle, outputs=[sudoku_output])
+    generate_button.click(fn=update_sudoku_ui, outputs=[sudoku_output])
 
 if __name__ == "__main__":
     demo.launch()

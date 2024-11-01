@@ -4,3 +4,4 @@ numpy
 rwkv
 torch
 httpx[socks]
+PIL
