@@ -3,3 +3,4 @@ gradio
 numpy
 rwkv
 torch
+httpx[socks]

@@ -12,27 +12,6 @@ import time
 import copy
 from utils import *
 
-
-# class DummyPipeline:
-#     def __init__(self):
-#         self.data = self.read_jsonl("dummy_data.jsonl")
-
-#     def generate(self, prompt, token_count, args, callback):
-#         for s in self.data[0]["text"]:
-#             callback(s)
-
-#     def read_jsonl(self, file_path):
-#         data = []
-#         with open(file_path, "r", encoding="utf-8") as file:
-#             for line in file:
-#                 try:
-#                     json_object = json.loads(line.strip())
-#                     data.append(json_object)
-#                 except json.JSONDecodeError as e:
-#                     print(f"Error decoding JSON: {e}")
-#         return data
-
-
 class CoTLogger:
     def __init__(self, grid=None, verbose=False, real_time_verification=False):
         self.log = ""
@@ -840,14 +819,14 @@ base_seed = None
 default_max_token_count = 500000
 break_when_something_wrong = False  # real-time verification
 
-current_seed = base_seed if base_seed is not None else int(time.time())
-grid, solved_grid = generate_sudoku(difficulty=default_difficulty, seed=current_seed)
+ui_current_seed = base_seed if base_seed is not None else int(time.time())
+grid, solved_grid = generate_sudoku(difficulty=default_difficulty, seed=ui_current_seed)
 grid, solved_grid = None, None
 
 while False:
     
     print('-' * 100)
-    print(f'DIFFICULTY: {default_difficulty} | SEED: {current_seed} | MAX TOKEN COUNT: {default_max_token_count} | BREAK WHEN SOMETHING WRONG: {break_when_something_wrong}')
+    print(f'DIFFICULTY: {default_difficulty} | SEED: {ui_current_seed} | MAX TOKEN COUNT: {default_max_token_count} | BREAK WHEN SOMETHING WRONG: {break_when_something_wrong}')
     print("Sudoku:")
     if grid is not None:
         print_sudoku(grid)
@@ -861,9 +840,9 @@ while False:
     elif op == "d":
         print(DIFFICULTY_NOTE)
         default_difficulty = int(input("Enter difficulty: "))
-        grid, solved_grid = generate_sudoku(difficulty=default_difficulty, seed=current_seed)
+        grid, solved_grid = generate_sudoku(difficulty=default_difficulty, seed=ui_current_seed)
     elif op == "n":
-        grid, solved_grid = generate_sudoku(difficulty=default_difficulty, seed=current_seed)
+        grid, solved_grid = generate_sudoku(difficulty=default_difficulty, seed=ui_current_seed)
     elif op == "i":
         while True:
             temp_grid = [[0] * 9 for _ in range(9)]
@@ -900,10 +879,10 @@ while False:
     elif op == "e":
         n = int(input("Enter number of samples: "))
         all_samples = []
-        print(f'SETTINGS: DIFFICULTY: {default_difficulty} | SEED: {current_seed} | MAX TOKEN COUNT: {default_max_token_count} | SAMPLES: {n}')
+        print(f'SETTINGS: DIFFICULTY: {default_difficulty} | SEED: {ui_current_seed} | MAX TOKEN COUNT: {default_max_token_count} | SAMPLES: {n}')
         print("Generating samples...")
         for i in tqdm(range(n)):
-            grid_i, solved_grid_i = generate_sudoku(difficulty=default_difficulty, seed=current_seed + i)
+            grid_i, solved_grid_i = generate_sudoku(difficulty=default_difficulty, seed=ui_current_seed + i)
             all_samples.append((grid_i, solved_grid_i))
         print("Solving samples...")
         result_correct_count = 0
@@ -935,4 +914,4 @@ while False:
     else:
         print("Invalid command")
             
-    current_seed = base_seed if base_seed is not None else int(time.time())
+    ui_current_seed = base_seed if base_seed is not None else int(time.time())
